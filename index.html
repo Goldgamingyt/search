@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Spotify Search Bar</title>
+</head>
+<body>
+  <h1>Spotify Search Bar</h1>
+  <form>
+    <label for="search">Search for a Song:</label>
+    <input type="text" id="search" name="search" placeholder="Search...">
+    <button type="submit" onclick="search()">Search</button>
+  </form>
+
+  <div id="results"></div>
+
+  <script>
+    function search() {
+      // Get the value of the search input
+      var searchTerm = document.getElementById("search").value;
+
+      // Make a request to the Spotify Web API
+      fetch(`https://api.spotify.com/v1/search?q=${searchTerm}&type=track`, {
+        headers: {
+          'Authorization': 'Bearer f2e803abfe884abc92afe2abd200598f'
+        }
+      })
+      .then(response => response.json())
+      .then(data => {
+        // Display the results in the div with id "results"
+        var resultsDiv = document.getElementById("results");
+        resultsDiv.innerHTML = "";
+        data.tracks.items.forEach(item => {
+          var trackDiv = document.createElement("div");
+          trackDiv.innerHTML = `
+            <img src="${item.album.images[0].url}" alt="${item.album.name}">
+            <h3>${item.name}</h3>
+          `;
+          resultsDiv.appendChild(trackDiv);
+        });
+      })
+      .catch(error => console.error(error));
+    }
+  </script>
+</body>
+</html>
